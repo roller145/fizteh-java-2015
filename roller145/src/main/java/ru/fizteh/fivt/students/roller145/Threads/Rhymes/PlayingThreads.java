@@ -8,7 +8,7 @@ public class PlayingThreads {
     public Integer quantity ;
     public int whoseTurn ;
 
-    PlayingThreads(int n){
+    public PlayingThreads(int n){
         quantity = n;
         whoseTurn = 0;
     }

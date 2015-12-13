@@ -10,7 +10,7 @@ public class ThreadWithName extends Thread {
     public  Integer name;
     public PlayingThreads parent;
 
-    ThreadWithName(Integer n, PlayingThreads p){
+    public ThreadWithName(Integer n, PlayingThreads p){
         name = n;
         parent = p;
     }

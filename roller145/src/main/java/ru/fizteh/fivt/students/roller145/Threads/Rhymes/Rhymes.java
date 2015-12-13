@@ -1,4 +1,7 @@
-package ru.fizteh.fivt.students.roller145.Threads;
+package ru.fizteh.fivt.students.roller145.Threads.Rhymes;
+
+import ru.fizteh.fivt.students.roller145.Threads.PlayingThreads;
+import ru.fizteh.fivt.students.roller145.Threads.ThreadWithName;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,7 +21,7 @@ public class Rhymes {
         if (number <= 0) throw new IllegalArgumentException();
 
         PlayingThreads pl = new PlayingThreads(number);
-        List<ThreadWithName> threads = new ArrayList<>();
+        List<ru.fizteh.fivt.students.roller145.Threads.ThreadWithName> threads = new ArrayList<>();
         for (int i = 0; i < number; ++i) {
             threads.add(new ThreadWithName(i, pl));
         }
