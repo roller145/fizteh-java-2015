@@ -1,80 +1,88 @@
 package ru.fizteh.fivt.students.roller145.CollectionManagementSystem.impl;
 
 /**
- * Created by User on 17.11.2015.
+ * Created by riv on 17.11.2015.
  */
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FromSmth<T> {
+    private List<T> elements;
+
+    public FromSmth() {
+        elements = new ArrayList<T>();
+    }
+
+    public FromSmth( Iterable<T> iterable) {
+        elements = new ArrayList<T>();
+        for ( T element : iterable) {
+            elements.add(element);
+        }
+    }
+
     public static <T> FromSmth<T> from(Iterable<T> iterable) {
-        throw new UnsupportedOperationException();
+        return new FromSmth<>(iterable);
+    }
+
+    public FromSmth(Stream<T> stream) {
+        elements = new ArrayList<T>();
+        stream.forEach(element->elements.add(element));
     }
 
     public static <T> FromSmth<T> from(Stream<T> stream) {
-        throw new UnsupportedOperationException();
-    }
-
-    public static <T> FromSmth<T> from(Query query) {
-        throw new UnsupportedOperationException();
+        return new FromSmth<>(stream);
     }
 
     @SafeVarargs
     public final <R> SelectSmth<T, R> select(Class<R> clazz, Function<T, ?>... s) {
-        throw new UnsupportedOperationException();
+        return new SelectSmth<T,R>(elements, clazz, false, s);
     }
-
-    /**
-     * Selects the only defined expression as is without wrapper.
-     */
-    public final <R> SelectSmth<T, R> select(Function<T, R> s) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Selects the only defined expression as is without wrapper.
-     */
-    public final <F, S> SelectSmth<T, Tuple<F, S>> select(Function<T, F> first, Function<T, S> second) {
-        throw new UnsupportedOperationException();
-    }
-
     @SafeVarargs
-    public final <R> SelectSmth<T, R> selectDistinct(Class<R> clazz, Function<T, ?>... s) {
-        throw new UnsupportedOperationException();
+    public final <R> SelectSmth<T, R> selectDistinct(Class<R> returnClass, Function<T, ?>... functions) {
+        return new SelectSmth<T,R>(elements, returnClass, true, functions);
     }
 
-    /**
-     * Selects the only defined expression as is without wrapper.
-     */
-    public final <R> SelectSmth<T, R> selectDistinct(Function<T, R> s) {
-        throw new UnsupportedOperationException();
+    public final <F, S> SelectSmth<T, Tuple<F, S>> select(Function<T, F> first, Function<T, S> second) {
+        return new SelectSmth<T, Tuple<F, S>>(elements, false, first, second);
     }
 
     public <J> JoinClause<T, J> join(Iterable<J> iterable) {
-        throw new UnsupportedOperationException();
+        return new JoinClause<T, J>(elements, iterable);
     }
 
-    public <J> JoinClause<T, J> join(Stream<J> stream) {
-        throw new UnsupportedOperationException();
-    }
+    public class JoinClause<S, J> {
 
-    public <J> JoinClause<T, J> join(Query<J> stream) {
-        throw new UnsupportedOperationException();
-    }
+        private List<S> firstElements = new ArrayList<>();
+        private List<J> secondElements = new ArrayList<>();
+        private List<Tuple<S, J>> elements = new ArrayList<>();
 
-    public class JoinClause<T, J> {
-
-        public FromSmth<Tuple<T, J>> on(BiPredicate<T, J> condition) {
-            throw new UnsupportedOperationException();
+        public JoinClause(List<S> firstElements, Iterable<J> secondElements) {
+            this.firstElements.addAll(firstElements.stream().collect(Collectors.toList()));
+            for (J curr : secondElements) {
+                this.secondElements.add(curr);
+            }
         }
 
-        public <K extends Comparable<?>> FromSmth<Tuple<T, J>> on(
-                Function<T, K> leftKey,
+        public FromSmth<Tuple<S, J>> on(BiPredicate<S, J> condition) {
+            for (S first : firstElements) {
+                for (J second : secondElements) {
+                    if (condition.test(first, second)) {
+                        elements.add(new Tuple<>(first, second));
+                    }
+                }
+            }
+            return new FromSmth<>(elements);
+        }
+
+        public <K extends Comparable<?>> FromSmth<Tuple<S, J>> on(
+                Function<S, K> leftKey,
                 Function<J, K> rightKey) {
             throw new UnsupportedOperationException();
         }
     }
-
 }

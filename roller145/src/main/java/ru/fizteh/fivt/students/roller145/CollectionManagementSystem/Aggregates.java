@@ -1,7 +1,7 @@
 package ru.fizteh.fivt.students.roller145.CollectionManagementSystem;
 
 /**
- * Created by Riv on 17.11.2015.
+ * Created by riv on 17.11.2015.
  */
 
 import java.util.HashSet;
@@ -67,24 +67,9 @@ public class Aggregates {
     /**
      * Number of items in source collection that turns this expression into not null.
      */
-    public static <C> Function<C, Integer> count(Function<C, Integer> expression) {
-        return new Agregator<C, Integer>() {
-            @Override
-            public Integer apply(List<C> elements) {
-                Set<Object> distincted = new HashSet<>();
-                elements.stream().filter(element -> !distincted.contains(expression.apply(element))).forEach(element -> {
-                    distincted.add(expression.apply(element));
-                });
-                return distincted.size();
-            }
-
-            @Override
-            public Integer apply(C c) {
-                return null;
-            }
-        };
+    public static <T> Function<T, Integer> count(Function<T, ?> expression) {
+        return new Count<>(expression);
     }
-
     /**
      * Average value for expression for elements of given collection.
      */
