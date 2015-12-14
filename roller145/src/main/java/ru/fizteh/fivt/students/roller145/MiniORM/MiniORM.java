@@ -6,6 +6,8 @@ package ru.fizteh.fivt.students.roller145.MiniORM;
 public class MiniORM <T,K>{
 
     MiniORM(Class objectType){
+
+        
         throw new UnsupportedOperationException();
     }
     T queryById(K id) {
