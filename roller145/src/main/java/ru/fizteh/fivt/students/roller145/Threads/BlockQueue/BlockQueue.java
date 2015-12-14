@@ -31,7 +31,7 @@ public class BlockQueue<R> {
        offer(e, 0);
     }
 
-    public List take(int n){
+    public List take(int n) throws InterruptedException {
         return take(n,0);
     }
 
@@ -90,5 +90,6 @@ public class BlockQueue<R> {
         } finally {
             lock.unlock();
         }
+        return result;
     }
 }
