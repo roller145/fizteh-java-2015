@@ -56,19 +56,22 @@ public class DataBaseService <T,K>{
         if (tableName.equals("")) {
             tableName = "MY_TABLE";
         }
+        int i = 0;
         for (Field elem : typeClass.getDeclaredFields()) {
             if (elem.getAnnotation(Column.class) != null) {
                 columns.add(new AnnotatedField(elem));
             }
             if (elem.getAnnotation(PrimaryKey.class) != null) {
                 if (elem.getAnnotation(Column.class) == null) {
-                    throw new IllegalArgumentException("Primary key should be column");
+                    throw new IllegalArgumentException("Первичный ключ должен иметь тип столбца");
                 }
                 if (primaryKey != null) {
-                    throw new IllegalArgumentException("Primary key should be one");
+                    throw new IllegalArgumentException("Первичный ключ долден быть один");
                 }
                 primaryKey = elem;
+                primaryKeyIndex = i;
             }
+            ++i;
         }
         try{
             resultSet = connection.getMetaData().getTables(null, null,
@@ -161,14 +164,24 @@ public class DataBaseService <T,K>{
 
     }
 
-    void update(T key) {
-
-        throw new UnsupportedOperationException();
+    void update(T key) throws SQLException {
+        StringBuilder newRequest = new StringBuilder().append("UPDATE ").append(tableName).append(" SET ");
+        for (int i = 0; i < columns.size(); ++i) {
+            if (i != 0) {
+                newRequest.append(", ");
+            }
+            newRequest.append(columns.get(i).getColumnName()).append(" = ?");
+        }
+        newRequest.append(" WHERE ").append(columns.get(primaryKeyIndex).getColumnName())
+                .append(" = ?");
+        statement.execute(newRequest.toString());
     }
 
-    void delete(T key){
 
-        throw new UnsupportedOperationException();
+    void delete(T key) throws SQLException {
+        StringBuilder newRequest = new StringBuilder();
+        newRequest.append("DELETE FROM ").append(tableName).append(columns.get(primaryKeyIndex).getColumnName()).append(" = ").append(key.toString());
+        statement.execute(newRequest.toString());
     }
 
     void createTable() throws OperationsException, SQLException {
