@@ -1,6 +1,5 @@
 package ru.fizteh.fivt.students.roller145.Threads.RollCall;
 
-import ru.fizteh.fivt.students.roller145.Threads.ThreadWithName;
 
 import java.util.Random;
 

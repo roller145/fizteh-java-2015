@@ -1,7 +1,6 @@
 package ru.fizteh.fivt.students.roller145.TwitterStream;
 
 import com.beust.jcommander.internal.Maps;
-import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 import com.sun.deploy.net.URLEncoder;
@@ -27,15 +26,11 @@ import static java.lang.Math.*;
 public class GetGeolocation {
     private static final String baseUrl = "http://maps.googleapis.com/maps/api/geocode/json";// путь к Geocoding API по HTTP
     private static final String GeoIPUrl  = "http://ipinfo.io/json";
-    private static final String near = "nearbly";
     private static final double EARTH_RADIUS = 6371;
     
 
     public Pair<GeoLocation, Double> getGeolocation(String were) throws IOException {
-        if (were.equals(near)) {
-            final JSONObject response = new JsonReader().read(GeoIPUrl);
-            were = response.getString("city");
-        }
+
         final Map<String, String> params = Maps.newHashMap();
         params.put("sensor", "false");// исходит ли запрос на геокодирование от устройства с датчиком местоположения
         params.put("address", were);// адрес, который нужно геокодировать
@@ -73,10 +68,15 @@ public class GetGeolocation {
 
     }
 
-    @SuppressWarnings("TryFinallyCanBeTryWithResources")
-    public class JsonReader {
+    public String getLocation() throws IOException {
+        final JSONObject response = new JsonReader().read(GeoIPUrl);
+        return response.getString("city");
+    }
 
-        private String readAll(final Reader rd) throws IOException {
+    @SuppressWarnings("TryFinallyCanBeTryWithResources")
+    public static class JsonReader {
+
+        public static String readAll(final Reader rd) throws IOException {
             final StringBuilder sb = new StringBuilder();
             int cp;
             while ((cp = rd.read()) != -1) {
@@ -85,7 +85,7 @@ public class GetGeolocation {
             return sb.toString();
         }
 
-        public JSONObject read(final String url) throws IOException, JSONException {
+        public static JSONObject read(final String url) throws IOException, JSONException {
             final InputStream is = new URL(url).openStream();
             try {
                 final BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));

@@ -85,6 +85,8 @@ public class DataBaseService <T,K>{
 
     }
 
+
+
     public T queryById(K id) throws OperationsException, SQLException, IllegalAccessException, InstantiationException {
         if (!hasTableYet){
             throw new OperationsException("Для данного запроа необходимо создать таблицу");

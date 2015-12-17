@@ -1,4 +1,4 @@
-package ru.fizteh.fivt.students.roller145.Threads;
+package ru.fizteh.fivt.students.roller145.Threads.Rhymes;
 
 import java.util.Objects;
 
@@ -17,18 +17,19 @@ public class ThreadWithName extends Thread {
 
     @Override
     public void run() {
-        synchronized (this.getClass()) {
-            while (!interrupted()) {
+        while (!interrupted()) {
+            synchronized (parent.getClass()) {
                 if (Objects.equals(parent.whoseTurn, name)) {
                     System.out.println("Thread - " + name.toString());
                     parent.whoseTurn = (name + 1) % parent.quantity;
                     this.getClass().notifyAll();
                 }
-                try {
-                    this.getClass().wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            }
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                System.out.print("Bad news");
+                e.printStackTrace();
             }
         }
     }

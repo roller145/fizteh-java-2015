@@ -21,13 +21,13 @@ public class TimeMethods {
         long hour = ChronoUnit.HOURS.between(when, currentTime);
         long day = ChronoUnit.DAYS.between(when, currentTime);
 
-            if (minute< 2) {
+            if (minute < 2) {
                 result+="Только что ";
             }
-            else if (hour  < 1) {
+            else if (hour < 1) {
                 result+= minute+ DisForm(minute, DistentionForms.ETime.MINUTE) +" назад ";
             }
-            else if (day  < 1 ) {
+            else if (day < 1) {
                 result+=(hour  + DisForm(hour, DistentionForms.ETime.HOUR)+ " назад ");
             }
             else {

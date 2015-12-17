@@ -1,4 +1,4 @@
-package ru.fizteh.fivt.students.roller145.Threads;
+package ru.fizteh.fivt.students.roller145.Threads.Rhymes;
 
 /**
  * Created by riv on 13.12.15.
